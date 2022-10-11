@@ -1,16 +1,17 @@
-import express from "express"; // node express 패키지 import
+import express, { Router } from "express"; // node express 패키지 import
 import bodyParser from "body-parser";
 import { MongoClient } from "mongodb"; // mongodb 패키지
 import dotenv from "dotenv"; // 환경변수 패키지
-// import path from "path"; // path 패키지
-// import { fileURLToPath } from "url"; // url 패키지
+import imageUploader from "./services/imageUploader.js";
+import path from "path"; // path 패키지
+import { fileURLToPath } from "url"; // url 패키지
+
+// path
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 // dotenv
 dotenv.config();
-
-// path
-// const __filename = fileURLToPath(import.meta.url);
-// const __dirname = path.dirname(__filename);
 
 // express
 const app = express();
@@ -29,6 +30,11 @@ MongoClient.connect(process.env.DB_URL, (error, client) => {
     app.listen(process.env.PORT, function () {
         console.log("listening on " + process.env.PORT);
     });
+});
+
+// S3에 이미지 업로드
+app.post("/image/upload", imageUploader.single("image"), (req, res) => {
+    res.send("업로드 완료!");
 });
 
 // db에 데이터 삽입하는 예제
