@@ -2,7 +2,6 @@
 import fs from "fs";
 import path from "path";
 import Sequelize from "sequelize";
-import process from "process";
 import config from "../config/config.js";
 import { fileURLToPath } from "url"; // url 패키지
 import { createRequire } from "module";

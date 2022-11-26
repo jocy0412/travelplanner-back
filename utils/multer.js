@@ -1,3 +1,4 @@
+import { Router } from "express";
 import AWS from "aws-sdk";
 import multer from "multer";
 import multerS3 from "multer-S3";
@@ -16,10 +17,11 @@ const s3 = new AWS.S3();
 
 const allowedExtensions = [".png", ".jpg", ".jpeg", ".bmp"];
 
-const imageUploader = multer({
+export default multer({
     storage: multerS3({
         s3: s3,
         bucket: "myawstravel", // aws 생성한 버킷 이름
+        acl: "public-read-write",
         key: (req, file, callback) => {
             const uploadDirectory = req.query.directory ?? "image";
             const extension = path.extname(file.originalname);
@@ -35,8 +37,5 @@ const imageUploader = multer({
                 `/${uploadDirectory}/${baseName}_${Date.now()}${extension}`
             );
         },
-        acl: "public-read-write",
     }),
 });
-
-export default imageUploader;

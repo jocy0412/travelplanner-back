@@ -1,13 +1,16 @@
 import { Router } from "express";
 import Controller from "../controllers/user.controller.js";
-// import cards from "../controllers/card.controller.js";
-// import upload, { bucket } from "./multer.js";
+import users from "../controllers/user.controller.js";
 
-const router = Router();
+const userRouter = Router();
 
 export default (app) => {
-    console.log("user service.js 사용중");
-    console.log(Controller);
+    userRouter.get("/info", async (req, res) => {
+        const user = await users.getUserInfo();
+        res.send(user);
+    });
 
-    app.use("/user", router);
+    console.log("user service.js 사용중");
+
+    app.use("/user", userRouter);
 };
