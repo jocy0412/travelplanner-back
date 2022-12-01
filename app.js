@@ -5,6 +5,8 @@ import fs from "fs"; // 파일시스템 패키지
 import path from "path"; // path 패키지
 import { fileURLToPath } from "url"; // url 패키지
 import db from "./models/index.js";
+import cookieParser from "cookie-parser";
+import https from "https";
 
 // path
 const __filename = fileURLToPath(import.meta.url);
@@ -18,7 +20,12 @@ dotenv.config();
 const app = express();
 
 // cors
-app.use(cors());
+app.use(
+    cors({
+        origin: true,
+        credentials: true,
+    })
+);
 
 // bodyParser - Express 4.16.0 이전 버전
 // app.use(bodyParser.json());
@@ -30,6 +37,10 @@ app.use(express.json());
 // // x-www-form-urlencoded 타입의 post 요청을 파싱해줌
 app.use(express.urlencoded({ extended: true }));
 
+// cookie-parser - cookie 사용을 위해
+app.use(cookieParser());
+
+// services 폴더 내의 파일 import
 (async () => {
     const files = fs.readdirSync(__dirname + "/services").filter((file) => {
         return (
@@ -45,6 +56,13 @@ app.use(express.urlencoded({ extended: true }));
     });
 })();
 
+const options = {
+    key: fs.readFileSync("./localhost-key.pem"), // 키
+    cert: fs.readFileSync("./localhost.pem"), // 인증서
+};
+
+const httpsServer = https.createServer(options, app);
+
 db.sequelize
     .sync()
     .then(() => {
@@ -52,8 +70,8 @@ db.sequelize
             `[${process.env.NODE_ENV.toUpperCase()}] 환경모드의 DB에 연결`
         );
         // DB에 연결되면 listen 시작
-        app.listen(process.env.PORT, () => {
-            console.log("listening on " + process.env.PORT);
+        httpsServer.listen(process.env.PORT, () => {
+            console.log("HTTPS server listening on " + process.env.PORT);
         });
     })
     .catch((err) => {
