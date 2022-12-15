@@ -23,7 +23,17 @@ const JWT = {
         try {
             return jwt.verify(token, secretKey);
         } catch (error) {
+            if (error.name === "TokenExpiredError") {
+                console.log("TokenExpiredError");
+            }
+            if (error.name === "JsonWebTokenError") {
+                console.log("JsonWebTokenError");
+            }
+            if (error.name === "NotBeforeError") {
+                console.log("NotBeforeError");
+            }
             console.log(error);
+            return false;
         }
     },
     refresh: () => {
@@ -38,7 +48,7 @@ const JWT = {
             const getToken = await userController.findToken(id); // refresh token 가져오기
             if (getToken == token) {
                 try {
-                    jwtUtil.verify(token, secret);
+                    jwtUtil.verify(token, secretKey);
                     return true;
                 } catch (err) {
                     return false;

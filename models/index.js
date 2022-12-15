@@ -25,15 +25,12 @@ sequelize = new Sequelize({
     host: config.host,
     port: config.port,
     dialect: config.dialect,
+    logging: false,
 });
 
 (async () => {
     const files = fs.readdirSync(__dirname).filter((file) => {
-        return (
-            file.indexOf(".") !== 0 &&
-            file !== basename &&
-            file.slice(-3) === ".js"
-        );
+        return file.indexOf(".") !== 0 && file !== basename && file.slice(-3) === ".js";
     });
 
     await files.map(async (file) => {

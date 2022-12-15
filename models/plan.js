@@ -1,7 +1,7 @@
 import { Model } from "sequelize";
 
 export default (sequelize, DataTypes) => {
-    class User extends Model {
+    class Plan extends Model {
         /**
          * Helper method for defining associations.
          * This method is not a part of Sequelize lifecycle.
@@ -11,16 +11,19 @@ export default (sequelize, DataTypes) => {
             // define association here
         }
     }
-    User.init(
+    Plan.init(
         {
-            userId: DataTypes.BIGINT,
-            userName: DataTypes.STRING,
-            userToken: DataTypes.STRING,
+            planId: DataTypes.STRING,
+            order: DataTypes.INTEGER,
+            title: DataTypes.STRING,
+            address: DataTypes.STRING,
+            lat: DataTypes.DECIMAL,
+            lng: DataTypes.DECIMAL,
         },
         {
             sequelize,
-            modelName: "User",
+            modelName: "Plan",
         }
     );
-    return User;
+    return Plan;
 };

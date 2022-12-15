@@ -56,6 +56,7 @@ app.use(cookieParser());
     });
 })();
 
+// localhost 작업을 위한 인증서 추가
 const options = {
     key: fs.readFileSync("./localhost-key.pem"), // 키
     cert: fs.readFileSync("./localhost.pem"), // 인증서
